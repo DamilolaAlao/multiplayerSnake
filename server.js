@@ -103,6 +103,19 @@ function emitGameOver(room, winner) {
   io.sockets.in(room).emit("gameOver", JSON.stringify({ winner }));
 }
 
+const ipadd = Object.values(require("os").networkInterfaces()).reduce(
+  (r, list) =>
+    r.concat(
+      list.reduce(
+        (rr, i) =>
+          rr.concat((i.family === "IPv4" && !i.internal && i.address) || []),
+        []
+      )
+    ),
+  []
+);
+
+const ipaddress = ipadd[0] || `localhost`;
 http.listen(port, () => {
-  console.log(`Socket.IO server running at http://localhost:${port}/`);
+  console.log(`Socket.IO server running at http://${ipaddress}:${port}/`);
 });
